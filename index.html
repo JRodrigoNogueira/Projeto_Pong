@@ -257,12 +257,12 @@
             if (jogo) {
                 if ((posBolaY > (posCpuY + (barraH / 2)) + velCpu)) {
                     //Mover para Baixo
-                    if ((posCpuY + barraH) <= (campoH - 5)) {
+                    if ((posCpuY + barraH) <= (campoH - 13)) {
                         posCpuY += velCpu
                     }
                     //Mover para Cima
                 } else if (posBolaY  < (posCpuY + (barraH / 2)) - velCpu) {
-                    if (posCpuY >= 5) {
+                    if (posCpuY >= 13) {
                         posCpuY -= velCpu
                     }
                 }
