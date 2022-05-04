@@ -57,6 +57,27 @@
             border-radius: 50%;
         }
 
+        #time {
+            position: absolute;
+            font-size: 30px;
+            top: 40%;
+            left: 49%;
+            width: 30px;
+            height: 30px;
+            color: white;
+        }
+
+        #recomecar {
+            display: none;
+        }
+
+        #vidas {
+            display: flex;
+            background-color: #15202b;
+            width: 160px;
+            justify-content: left;
+        }
+
         .b {
             margin-top: 16.49px;
             width: 170px;
@@ -79,7 +100,8 @@
             margin-top: 16.49px;
             margin-left: 10px;
             font-size: 50px;
-            text-align: center;
+            line-height: 50px;
+            justify-content: center;
             background-color: #00ba7c;
         }
 
@@ -111,14 +133,19 @@
         <div id="score">
             <div class="score">
                 <h2>Vidas Restantes: </h2>
-                <input type="text" class="msg" id="vidas" value="3">
+                <div class="msg" id="vidas">
+                    <img src="/img/cor.png" alt="coração" class="v">
+                    <img src="/img/cor.png" alt="coração" class="v">
+                    <img src="/img/cor.png" alt="coração" class="v">
+                </div>
             </div>
             <div class="score">
                 <h2>Score: </h2>
-                <input type="text" class="msg" id="pontos" value="0">
+                <div class="msg" id="pontos">0</div>
             </div>
         </div>
         <div id="jogo">
+            <div id="time"></div>
             <div id="bola"></div>
             <div id="jogador" class="barra esquerda"></div>
             <div id="cpu" class="barra direita"></div>
@@ -142,6 +169,8 @@
         let jogador
         let cpu
         let vidas, pontos
+        let time
+        let v
 
         //Controles de Animações
         let games, frames
@@ -152,7 +181,7 @@
         let posCpuX, posCpuxY
 
         //Reset
-        let posJogInitY = 180, posJogInitX = 10, posCpuInitY = 180, posCpuInitX = 930, posBolaInitX = 480, posBolaInitY = 250, pontosInit = 0, vidasInit = 3, dificultAnt = "n1"
+        let posJogInitY = 180, posJogInitX = 10, posCpuInitY = 180, posCpuInitX = 930, posBolaInitX = 480, posBolaInitY = 250, pontosInit = 0, vidasInit = 3, velIncInit = 64, dificultAnt = "n1"
 
         //Tamanhos
         let campoX = 0, campoY = 0, campoW = 960, campoH = 500
@@ -163,16 +192,17 @@
         let cpuY = 0, dirJy
 
         //Velocidade
-        let velBola, velCpu, velJogador
+        let velBola, velCpu, velJogador, velInc
 
         //Controle
         let tecla
-        let jogo = false, perdeu = false, desafio = false
+        let jogo = false, perdeu = false, desafio = false, pause = false
         let dificult
+        let contador = 3
 
         //Movimentação Jogador
         function controlarJ() {
-            if (jogo) {
+            if ((jogo) && (!pause)) {
                 posJogY += velJogador * dirJy
                 //Movimentação Jogador - Cima OU Baixo
                 if (((posJogY + barraH) >= campoH) || (posJogY) <= 0) {
@@ -193,7 +223,7 @@
                     ((posBolaY + bolaH >= posJogY) && (posBolaY <= posJogY + barraH))
                 ) {
                     bolaX *= -1
-                    bolaY = (((posBolaY + (bolaH / 2)) - (posJogY + (barraH / 2))) / 32)
+                    bolaY = (((posBolaY + (bolaH / 2)) - (posJogY + (barraH / 2))) / velInc)
                 }
                 //Colisão com Cpu
                 if (
@@ -201,7 +231,7 @@
                     ((posBolaY + bolaH >= posCpuY) && (posBolaY <= posCpuY + barraH))
                 ) {
                     bolaX *= -1
-                    bolaY = (((posBolaY + (bolaH / 2)) - (posCpuY + (barraH / 2))) / 32)
+                    bolaY = (((posBolaY + (bolaH / 2)) - (posCpuY + (barraH / 2))) / velInc)
                 }
                 //Limites: Superior e Inferior
                 if ((posBolaY >= 480) || (posBolaY <= 0)) {
@@ -217,13 +247,14 @@
                     jogador.style.top = posJogInitY + "px"
                     cpu.style.top = posCpuInitY + "px"
                     pontos++
-                    document.getElementById("pontos").value = pontos
-                    jogo = false
+                    document.getElementById("pontos").innerHTML = pontos
+                    jogo = true
                     if (pontos == 10) {
                         alert("Parabéns, Você venceu!\nVocê pode continuar jogando ou...\nRecomeçar em uma dificuldade ainda mais desafiadora!")
                         document.getElementById("pontos").style.background = "#1d9bf0"
                         desafio = true
-                    }//Pontuação - Cpu
+                    } reiniciar()
+                    //Pontuação - Cpu
                 } else if (posBolaX <= 0) {
                     velBola = 0
                     posBolaX = posBolaInitX
@@ -233,19 +264,17 @@
                     jogador.style.top = posJogInitY + "px"
                     cpu.style.top = posCpuInitY + "px"
                     vidas--
-                    document.getElementById("vidas").value = vidas
-                    jogo = false
-                    if (vidas == 1) {
-                        document.getElementById("vidas").style.background = "#ef7d31"
-                    } else if ((vidas <= 0) && (!desafio)) {
-                        document.getElementById("vidas").style.background = "#f91880"
+                    v[vidas].style.display = "none"
+                    jogo = true
+                    if ((vidas <= 0) && (!desafio)) {
                         perdeu = true
+                        jogo = false
                         alert("Game Over!\nVocê pode tentar outra vez ou diminuir a dificuldade!")
                     } else if ((vidas <= 0) && (desafio)) {
-                        document.getElementById("vidas").style.background = "#f91880"
                         perdeu = true
+                        jogo = false
                         alert(`Game Over!\nBem jogado, sua pontuação foi de ${pontos}.\nTente supera-la recomeçando o jogo!`)
-                    }
+                    } reiniciar()
                 }
                 bola.style.top = posBolaY + "px"
                 bola.style.left = posBolaX + "px"
@@ -261,7 +290,7 @@
                         posCpuY += velCpu
                     }
                     //Mover para Cima
-                } else if (posBolaY  < (posCpuY + (barraH / 2)) - velCpu) {
+                } else if (posBolaY < (posCpuY + (barraH / 2)) - velCpu) {
                     if (posCpuY >= 13) {
                         posCpuY -= velCpu
                     }
@@ -301,90 +330,125 @@
 
         //Inicio do Jogo
         function iniciar() {
-            if ((!jogo) && (!perdeu)) {
-                velBola = 8
-                cancelAnimationFrame(frames)
-                jogo = true
-                dirJy = 0
-                bolaY = 0
-                if ((Math.random() * 10) < 5) {
-                    bolaX = -1
-                } else {
-                    bolaX = 1
-                }
-                posBolaX = posBolaInitX
-                posBolaY = posBolaInitY
-                posJogX = posJogInitX
-                posJogY = posJogInitY
-                posCpuX = posCpuInitX
-                posCpuY = posCpuInitY
-                game()
+            btRecomecar.style.display = "inline"
+            document.getElementById("time").innerHTML = ""
+            contador = 3
+            btIniciar.style.display = "none"
+            velBola = 8
+            cancelAnimationFrame(frames)
+            jogo = true
+            dirJy = 0
+            bolaY = 0
+            if ((Math.random() * 10) < 5) {
+                bolaX = -1
+            } else {
+                bolaX = 1
             }
+            posBolaX = posBolaInitX
+            posBolaY = posBolaInitY
+            posJogX = posJogInitX
+            posJogY = posJogInitY
+            posCpuX = posCpuInitX
+            posCpuY = posCpuInitY
+            game()
         }
 
-        //Debug ou Restart do Jogo
+
+        //Restart do Jogo
         function recomecar() {
-            if ((!perdeu) && (jogo)) {
-                jogo = false
-                iniciar()
-            } else {
-                document.getElementById("vidas").value = vidasInit
-                document.getElementById("pontos").value = pontosInit
-                document.getElementById("pontos").style.background = "#00ba7c"
-                document.getElementById("vidas").style.background = "#00ba7c"
+            if (!pause) {
+                btIniciar.style.display = "inline"
+                document.getElementById("time").innerHTML = ""
+                v[0].style.display = "inline"
+                v[1].style.display = "inline"
+                v[2].style.display = "inline"
+                bola.style.left = posBolaInitX + "px"
+                bola.style.top = posBolaInitY + "px"
+                jogador.style.left = posJogInitX + "px"
+                jogador.style.top = posJogInitY + "px"
+                cpu.style.left = posCpuInitX + "px"
+                cpu.style.top = posCpuInitY + "px"
                 vidas = vidasInit
                 pontos = pontosInit
                 perdeu = false
+                jogo = false
+                btRecomecar.style.display = "none"
             }
         }
 
         //Selecionar Dificuldade
         function nivel() {
-            if (!jogo) {
+            if ((!jogo) && (contador == 3)) {
                 switch (dificult.value) {
                     case "n1":
-                        velCpu = 8
+                        velCpu = 4
                         velJogador = 8
+                        velInc = 64
                         break
 
                     case "n2":
-                        velCpu = 10
-                        velJogador = 10
+                        velCpu = 6
+                        velJogador = 8
+                        velInc = 64
                         break
 
                     case "n3":
-                        velCpu = 12
-                        velJogador = 10
+                        velCpu = 8
+                        velJogador = 8
+                        velInc = 32
                         break
 
                     case "n4":
-                        velCpu = 12
+                        velCpu = 10
                         velJogador = 8
+                        velInc = 32
                         break
 
                     case "n5":
-                        velCpu = 14
+                        velCpu = 12
                         velJogador = 8
+                        velInc = 32
                         break
                 }
                 dificultAnt = dificult.value
+                perdeu = true
                 recomecar()
-            } else if (jogo) {
-                alert("Mude o Nível apenas quando não estiver jogando!")
+            } else {
+                alert("Mude o nível apenas quando não estiver jogando!")
                 dificult.value = dificultAnt
+            }
+        }
+
+        //Reinicio Automático
+        function reiniciar() {
+            if ((!perdeu) && (jogo)) {
+                pause = true
+                if (contador > 0) {
+                    document.getElementById("time").innerHTML = `${contador}...`
+                    contador--
+                    setTimeout(reiniciar, 1000)
+                } else {
+                    document.getElementById("time").innerHTML = "Vai!"
+                    jogo = false
+                    pause = false
+                    setTimeout(iniciar, 100)
+                }
             }
         }
 
         //Inicialização
         function inicializar() {
-            velBola = velCpu = velJogador = 8
+            velBola = velJogador = 8
+            velCpu = 4
+            velInc = velIncInit
             vidas = vidasInit
             pontos = pontosInit
-            menu = document.getElementsByClassName("bt")
+            v = document.getElementsByClassName("v")
             btIniciar = document.getElementById("iniciar")
             btIniciar.addEventListener("click", iniciar)
             btRecomecar = document.getElementById("recomecar")
             btRecomecar.addEventListener("click", recomecar)
+            btRecomecar.style.display = "none"
             dificult = document.getElementById("nivel")
             bola = document.getElementById("bola")
             jogador = document.getElementById("jogador")
