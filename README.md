@@ -5,7 +5,7 @@ Esse é o meu primeiro projeto desenvolvido com HTML, CSS e Javascript, que simu
 
 # Como jogar
 
-Nele, o seu objetivo é não deixar a bola atravessar o seu lado do campo enquanto o seu adversário tenta fazer o mesmo.
+Nesse jogo, o seu objetivo é não deixar a bola atravessar o seu lado do campo enquanto o seu adversário tenta fazer o mesmo.
 
 Caso você perca as três vidas restantes, o jogo irá acabar, e você pode tentar outra vez!
 
@@ -20,4 +20,4 @@ Caso você marque uma pontuação de pelo menos 10 pontos, você atingiu o objet
 
 # Desenvolvido por:
 
-[@JRodrigoNogueira]https://github.com/JRodrigoNogueira
+[@JRodrigoNogueira](https://github.com/JRodrigoNogueira)
