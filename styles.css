@@ -11,6 +11,12 @@ body {
 
 h1 {
     font-size: 60px;
+    margin: 0;
+    padding: 10px;
+}
+
+h2 {
+    margin: 0;
 }
 
 footer {
@@ -31,6 +37,7 @@ p {
 #titulo {
     display: flex;
     justify-content: center;
+    
 }
 
 #container {
@@ -76,6 +83,7 @@ p {
 .painel {
     display: flex;
     justify-content: space-between;
+    
 }
 
 .btn {
@@ -89,6 +97,7 @@ p {
 
 .d-flex {
     display: flex;
+    align-items: center;
 }
 
 .topInfo {
