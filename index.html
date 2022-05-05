@@ -6,123 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pong</title>
-    <style>
-        body {
-            margin: 0;
-            background-color: #15202b;
-        }
-
-        h2 {
-            color: white;
-            font-size: 30px;
-        }
-
-        #score {
-            margin-top: 16.49px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        #titulo {
-            display: flex;
-            justify-content: center;
-            color: white;
-            font-size: 30px;
-        }
-
-        #container {
-            display: grid;
-            justify-content: center;
-        }
-
-        #painel {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        #jogo {
-            position: relative;
-            width: 960px;
-            height: 500px;
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        #bola {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            background-color: #00ba7c;
-            border-radius: 50%;
-        }
-
-        #time {
-            position: absolute;
-            font-size: 30px;
-            top: 40%;
-            left: 49%;
-            width: 30px;
-            height: 30px;
-            color: white;
-        }
-
-        #recomecar {
-            display: none;
-        }
-
-        #vidas {
-            display: flex;
-            background-color: #15202b;
-            width: 160px;
-            justify-content: left;
-        }
-
-        .b {
-            margin-top: 16.49px;
-            width: 170px;
-            text-align: center;
-            height: 50px;
-            font-size: 30px;
-            color: white;
-            background-color: #ef7d31;
-            cursor: pointer;
-        }
-
-        .score {
-            display: flex;
-        }
-
-        .msg {
-            display: flex;
-            width: 60px;
-            height: 50px;
-            margin-top: 16.49px;
-            margin-left: 10px;
-            font-size: 50px;
-            line-height: 50px;
-            justify-content: center;
-            background-color: #00ba7c;
-        }
-
-        .barra {
-            position: absolute;
-            width: 20px;
-            top: calc(50% - 70px);
-            height: 140px;
-            border-radius: 125px;
-        }
-
-        .esquerda {
-            left: 1%;
-            background-color: #1d9bf0
-        }
-
-        .direita {
-            left: 97%;
-            background-color: #f91880
-        }
-    </style>
+    <link rel="stylesheet" href="/styles.css">
+    <script type="text/javascript" src="/script.js"></script>
 </head>
 
 <body>
@@ -130,30 +15,30 @@
         <div id="titulo">
             <h1>Pong</h1>
         </div>
-        <div id="score">
-            <div class="score">
+        <div class="painel">
+            <div class="d-flex">
                 <h2>Vidas Restantes: </h2>
-                <div class="msg" id="vidas">
-                    <img src="img/cor.png" alt="coração" class="v">
-                    <img src="img/cor.png" alt="coração" class="v">
-                    <img src="img/cor.png" alt="coração" class="v">
+                <div class="topInfo" id="vidasWrapper">
+                    <img src="img/cor.png" alt="coração" class="vidas">
+                    <img src="img/cor.png" alt="coração" class="vidas">
+                    <img src="img/cor.png" alt="coração" class="vidas">
                 </div>
             </div>
-            <div class="score">
-                <h2>Score: </h2>
-                <div class="msg" id="pontos">0</div>
+            <div class="d-flex">
+                <h2>Pontos: </h2>
+                <div class="topInfo" id="pontos">0</div>
             </div>
         </div>
         <div id="jogo">
-            <div id="time"></div>
+            <div id="tempo"></div>
             <div id="bola"></div>
             <div id="jogador" class="barra esquerda"></div>
             <div id="cpu" class="barra direita"></div>
         </div>
-        <div id="painel">
-            <button id="recomecar" class="b">Recomeçar</button>
-            <button id="iniciar" class="b">Jogar</button>
-            <select id="nivel" class="b" onchange="nivel()">
+        <div class="painel">
+            <button id="recomecar" class="btn">Recomeçar</button>
+            <button id="iniciar" class="btn">Jogar</button>
+            <select id="nivel" class="btn" onchange="nivel()">
                 <option value="n1">Nível 1</option>
                 <option value="n2">Nível 2</option>
                 <option value="n3">Nível 3</option>
@@ -161,305 +46,23 @@
                 <option value="n5">Nível 5</option>
             </select>
         </div>
+        <div>
+            <footer>
+                <p>Criado por José Rodrigo L. Nogueira</p>
+                <p>&copy; Todos os direitos reservados.</p>
+            </footer>
+        </div>
+        <div id="msgModal" class="modalContainer">
+            <div class="modal">
+                <button class="fechar" onclick="removerModal()">x</button>
+                <h3 id="mensagem"></h3>
+                <div class="painel">
+                    <input type="button" class="btn" value="Recomeçar" onclick="recomecar()">
+                    <input type="button" class="btn" value="Continuar" onclick="removerModal()">
+                </div>
+            </div>
+        </div>
     </div>
-    <script>
-        //Elementos
-        let btIniciar
-        let bola
-        let jogador
-        let cpu
-        let vidas, pontos
-        let time
-        let v
-
-        //Controles de Animações
-        let games, frames
-
-        //Posições
-        let posBolaX, posBolaY
-        let posJogX, posJogY
-        let posCpuX, posCpuxY
-
-        //Reset
-        let posJogInitY = 180, posJogInitX = 10, posCpuInitY = 180, posCpuInitX = 930, posBolaInitX = 480, posBolaInitY = 250, pontosInit = 0, vidasInit = 3, velIncInit = 64, dificultAnt = "n1"
-
-        //Tamanhos
-        let campoX = 0, campoY = 0, campoW = 960, campoH = 500
-        let barraW = 20, barraH = 140, bolaW = 20, bolaH = 20
-
-        //Direções
-        let bolaX, bolaY
-        let cpuY = 0, dirJy
-
-        //Velocidade
-        let velBola, velCpu, velJogador, velInc
-
-        //Controle
-        let tecla
-        let jogo = false, perdeu = false, desafio = false, pause = false
-        let dificult
-        let contador = 3
-
-        //Movimentação Jogador
-        function controlarJ() {
-            if ((jogo) && (!pause)) {
-                posJogY += velJogador * dirJy
-                //Movimentação Jogador - Cima OU Baixo
-                if (((posJogY + barraH) >= campoH) || (posJogY) <= 0) {
-                    posJogY += (velJogador * dirJy) * (-1)
-                }
-                jogador.style.top = posJogY + "px"
-            }
-        }
-
-        //Movimentação Bola
-        function controlarB() {
-            if (jogo) {
-                posBolaX += velBola * bolaX
-                posBolaY += velBola * bolaY
-                //Colisão com Jogador
-                if (
-                    (posBolaX <= posJogX + barraW) &&
-                    ((posBolaY + bolaH >= posJogY) && (posBolaY <= posJogY + barraH))
-                ) {
-                    bolaX *= -1
-                    bolaY = (((posBolaY + (bolaH / 2)) - (posJogY + (barraH / 2))) / velInc)
-                }
-                //Colisão com Cpu
-                if (
-                    (posBolaX >= posCpuX - barraW) &&
-                    ((posBolaY + bolaH >= posCpuY) && (posBolaY <= posCpuY + barraH))
-                ) {
-                    bolaX *= -1
-                    bolaY = (((posBolaY + (bolaH / 2)) - (posCpuY + (barraH / 2))) / velInc)
-                }
-                //Limites: Superior e Inferior
-                if ((posBolaY >= 480) || (posBolaY <= 0)) {
-                    bolaY *= -1
-                }
-                //Pontuação - Jogador
-                if (posBolaX >= (campoW - bolaW)) {
-                    velBola = 0
-                    posBolaX = posBolaInitX
-                    posBolaY = posBolaInitY
-                    posJogY = posJogInitY
-                    posCpuY = posCpuInitY
-                    jogador.style.top = posJogInitY + "px"
-                    cpu.style.top = posCpuInitY + "px"
-                    pontos++
-                    document.getElementById("pontos").innerHTML = pontos
-                    jogo = true
-                    if (pontos == 10) {
-                        alert("Parabéns, Você venceu!\nVocê pode continuar jogando ou...\nRecomeçar em uma dificuldade ainda mais desafiadora!")
-                        document.getElementById("pontos").style.background = "#1d9bf0"
-                        desafio = true
-                    } reiniciar()
-                    //Pontuação - Cpu
-                } else if (posBolaX <= 0) {
-                    velBola = 0
-                    posBolaX = posBolaInitX
-                    posBolaY = posBolaInitY
-                    posJogY = posJogInitY
-                    posCpuY = posCpuInitY
-                    jogador.style.top = posJogInitY + "px"
-                    cpu.style.top = posCpuInitY + "px"
-                    vidas--
-                    v[vidas].style.display = "none"
-                    jogo = true
-                    if ((vidas <= 0) && (!desafio)) {
-                        perdeu = true
-                        jogo = false
-                        alert("Game Over!\nVocê pode tentar outra vez ou diminuir a dificuldade!")
-                    } else if ((vidas <= 0) && (desafio)) {
-                        perdeu = true
-                        jogo = false
-                        alert(`Game Over!\nBem jogado, sua pontuação foi de ${pontos}.\nTente supera-la recomeçando o jogo!`)
-                    } reiniciar()
-                }
-                bola.style.top = posBolaY + "px"
-                bola.style.left = posBolaX + "px"
-            }
-        }
-
-        //Movimentação Cpu
-        function controlarC() {
-            if (jogo) {
-                if ((posBolaY > (posCpuY + (barraH / 2)) + velCpu)) {
-                    //Mover para Baixo
-                    if ((posCpuY + barraH) <= (campoH - 13)) {
-                        posCpuY += velCpu
-                    }
-                    //Mover para Cima
-                } else if (posBolaY < (posCpuY + (barraH / 2)) - velCpu) {
-                    if (posCpuY >= 13) {
-                        posCpuY -= velCpu
-                    }
-                }
-                cpu.style.top = posCpuY + "px"
-            }
-        }
-
-        //Leitura de Movimento
-        function teclaD() {
-            tecla = event.keyCode
-            if (tecla == 38) {
-                dirJy = -1
-            } else if (tecla == 40) {
-                dirJy = +1
-            }
-        }
-
-        function teclaU() {
-            tecla = event.keyCode
-            if (tecla == 38) {
-                dirJy = 0
-            } else if (tecla == 40) {
-                dirJy = 0
-            }
-        }
-
-        //Recursividade para Animação
-        function game() {
-            if (jogo) {
-                controlarJ()
-                controlarB()
-                controlarC()
-            }
-            frames = requestAnimationFrame(game)
-        }
-
-        //Inicio do Jogo
-        function iniciar() {
-            btRecomecar.style.display = "inline"
-            document.getElementById("time").innerHTML = ""
-            contador = 3
-            btIniciar.style.display = "none"
-            velBola = 8
-            cancelAnimationFrame(frames)
-            jogo = true
-            dirJy = 0
-            bolaY = 0
-            if ((Math.random() * 10) < 5) {
-                bolaX = -1
-            } else {
-                bolaX = 1
-            }
-            posBolaX = posBolaInitX
-            posBolaY = posBolaInitY
-            posJogX = posJogInitX
-            posJogY = posJogInitY
-            posCpuX = posCpuInitX
-            posCpuY = posCpuInitY
-            game()
-        }
-
-
-        //Restart do Jogo
-        function recomecar() {
-            if (!pause) {
-                btIniciar.style.display = "inline"
-                document.getElementById("time").innerHTML = ""
-                v[0].style.display = "inline"
-                v[1].style.display = "inline"
-                v[2].style.display = "inline"
-                document.getElementById("pontos").innerHTML = "0"
-                bola.style.left = posBolaInitX + "px"
-                bola.style.top = posBolaInitY + "px"
-                jogador.style.left = posJogInitX + "px"
-                jogador.style.top = posJogInitY + "px"
-                cpu.style.left = posCpuInitX + "px"
-                cpu.style.top = posCpuInitY + "px"
-                vidas = vidasInit
-                pontos = pontosInit
-                perdeu = false
-                jogo = false
-                btRecomecar.style.display = "none"
-            }
-        }
-
-        //Selecionar Dificuldade
-        function nivel() {
-            if ((!jogo) && (contador == 3)) {
-                switch (dificult.value) {
-                    case "n1":
-                        velCpu = 4
-                        velJogador = 8
-                        velInc = 64
-                        break
-
-                    case "n2":
-                        velCpu = 6
-                        velJogador = 8
-                        velInc = 64
-                        break
-
-                    case "n3":
-                        velCpu = 8
-                        velJogador = 8
-                        velInc = 32
-                        break
-
-                    case "n4":
-                        velCpu = 10
-                        velJogador = 8
-                        velInc = 32
-                        break
-
-                    case "n5":
-                        velCpu = 12
-                        velJogador = 8
-                        velInc = 32
-                        break
-                }
-                dificultAnt = dificult.value
-                perdeu = true
-                recomecar()
-            } else {
-                alert("Mude o nível apenas quando não estiver jogando!")
-                dificult.value = dificultAnt
-            }
-        }
-
-        //Reinicio Automático
-        function reiniciar() {
-            if ((!perdeu) && (jogo)) {
-                pause = true
-                if (contador > 0) {
-                    document.getElementById("time").innerHTML = `${contador}...`
-                    contador--
-                    setTimeout(reiniciar, 1000)
-                } else {
-                    document.getElementById("time").innerHTML = "Vai!"
-                    jogo = false
-                    pause = false
-                    setTimeout(iniciar, 100)
-                }
-            }
-        }
-
-        //Inicialização
-        function inicializar() {
-            velBola = velJogador = 8
-            velCpu = 4
-            velInc = velIncInit
-            vidas = vidasInit
-            pontos = pontosInit
-            v = document.getElementsByClassName("v")
-            btIniciar = document.getElementById("iniciar")
-            btIniciar.addEventListener("click", iniciar)
-            btRecomecar = document.getElementById("recomecar")
-            btRecomecar.addEventListener("click", recomecar)
-            btRecomecar.style.display = "none"
-            dificult = document.getElementById("nivel")
-            bola = document.getElementById("bola")
-            jogador = document.getElementById("jogador")
-            cpu = document.getElementById("cpu")
-            document.addEventListener("keydown", teclaD)
-            document.addEventListener("keyup", teclaU)
-        }
-
-        window.addEventListener("load", inicializar)
-    </script>
 </body>
 
 </html>

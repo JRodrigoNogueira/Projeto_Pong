@@ -1,0 +1,177 @@
+* {
+    color: white;
+    font-size: 30px;
+}
+
+body {
+    margin: 0;
+    background-color: #15202b;
+}
+
+h1 {
+    font-size: 60px;
+}
+
+footer {
+    text-align: center;
+    gap: 0;
+    margin: 0;
+    padding: 50px;
+}
+
+p {
+    font-size: 20px;
+}
+
+#pontos {
+    background-color: #00ba7c;
+    color: black;
+}
+
+#titulo {
+    display: flex;
+    justify-content: center;
+}
+
+#container {
+    display: grid;
+    justify-content: center;
+}
+
+#jogo {
+    position: relative;
+    width: 960px;
+    height: 500px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#bola {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: #00ba7c;
+    border-radius: 50%;
+}
+
+#tempo {
+    position: absolute;
+    top: 40%;
+    left: 49%;
+    width: 30px;
+    height: 30px;
+}
+
+#recomecar {
+    display: none;
+}
+
+#vidasWrapper {
+    display: flex;
+    width: 160px;
+    justify-content: left;
+}
+
+.painel {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn {
+    margin-top: 15px;
+    width: 170px;
+    text-align: center;
+    height: 50px;
+    background-color: #ef7d31;
+    cursor: pointer;
+}
+
+.d-flex {
+    display: flex;
+}
+
+.topInfo {
+    display: flex;
+    width: 60px;
+    height: 50px;
+    margin-top: 15px;
+    margin-left: 10px;
+    font-size: 50px;
+    line-height: 50px;
+    justify-content: center;
+}
+
+.barra {
+    position: absolute;
+    width: 20px;
+    top: calc(50% - 70px);
+    height: 140px;
+    border-radius: 125px;
+}
+
+.esquerda {
+    left: 1%;
+    background-color: #1d9bf0
+}
+
+.direita {
+    right: 1%;
+    background-color: #f91880
+}
+
+.modalContainer.mostrar {
+    display: flex;
+}
+
+.modalContainer {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0, 0.5);
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 9999;
+}
+
+.modal {
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
+    width: 30%;
+    min-width: 100px;
+    padding: 40px;
+    border: 10px solid #15202b;
+    text-align: center;
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+@keyframes modal{
+    from {
+        opacity: 0;
+        transform: translate3d(0,-60px,0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0,0,0);
+    }
+}
+
+.mostrar .modal{
+    animation: modal .3s;
+}
+
+.fechar {
+    position: absolute;
+    right: -30px;
+    top: -30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1);
+    background: #15202b;
+    cursor: pointer;
+}
