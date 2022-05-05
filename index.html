@@ -6,23 +6,35 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pong</title>
+
+    <!-- !! Separar a tag <style> em um arquivo .css separado para organização de código. -->
+
     <style>
         body {
+            /* Pesquisar sobre RESET CSS */
             margin: 0;
             background-color: #15202b;
         }
 
+        /* Se todo texto é branco, você pode colocar -> 
+        //* { 
+        //    color : white 
+        //}  e aplicar cores especificas em outros casos*/
         h2 {
             color: white;
             font-size: 30px;
         }
 
+        /* Evite utilizar medidas "px" com muita frequencia, elas não são responsivas, 
+        entendo que esse não é um caso que você busca responsividade, mas fica o aprendizado */
         #score {
             margin-top: 16.49px;
+            /* 16.49px <- isso pode ser um problema, tente não fazer as coisas tão estáticas */
             display: flex;
             justify-content: space-between;
         }
 
+        /* Unificar o idioma que tu escreve score e titulo? - poderia ser placar e titulo ou title and score  */
         #titulo {
             display: flex;
             justify-content: center;
@@ -32,10 +44,12 @@
 
         #container {
             display: grid;
+            /* por que esse container é grid ? Cade os templates-rows/cols ? Poderia ser somente um display block com filhos block ?*/
             justify-content: center;
         }
 
         #painel {
+            /* Boas regras! Mas isso aq é um painel ? Poderia ser Button Area? Só tem botões, não é de fato um painel*/
             display: flex;
             justify-content: space-between;
         }
@@ -55,9 +69,11 @@
             height: 20px;
             background-color: #00ba7c;
             border-radius: 50%;
+            /* aqui poderia ser 100%, você quer garantir que ela seja redonda por toda vida. */
         }
 
         #time {
+            /* O que é isso, oq faz?? */
             position: absolute;
             font-size: 30px;
             top: 40%;
@@ -68,15 +84,19 @@
         }
 
         #recomecar {
+            /* poderia dizer que é um botão, certo ? */
             display: none;
         }
 
         #vidas {
+            /* por que o fundo do vidas é verde por padrão? o display não é escuro já ? */
             display: flex;
             background-color: #15202b;
             width: 160px;
             justify-content: left;
         }
+
+        /* O que é .b, isso são os botões? .button? Parabéns pela reutilização de código. */
 
         .b {
             margin-top: 16.49px;
@@ -89,7 +109,9 @@
             cursor: pointer;
         }
 
+        /* Por que uma class score se tu já estilizou o ID ? poderia reaproveitar e escrever menos código */
         .score {
+            /* isso poderia ser um .d-flex? referindo-se a um display flex*/
             display: flex;
         }
 
@@ -98,6 +120,7 @@
             width: 60px;
             height: 50px;
             margin-top: 16.49px;
+            /* mesma coisa que falei sobre os px, evite definir alturas/larguras fixas. */
             margin-left: 10px;
             font-size: 50px;
             line-height: 50px;
@@ -109,6 +132,7 @@
             position: absolute;
             width: 20px;
             top: calc(50% - 70px);
+            /* boa */
             height: 140px;
             border-radius: 125px;
         }
@@ -120,6 +144,7 @@
 
         .direita {
             left: 97%;
+            /* poderia ser right 1% ? para padronizar? igual o .esquerda */
             background-color: #f91880
         }
     </style>
@@ -127,13 +152,18 @@
 
 <body>
     <div id="container">
+        <!-- Bom uso do ID -->
         <div id="titulo">
+            <!-- Bom uso do ID -->
             <h1>Pong</h1>
         </div>
         <div id="score">
+            <!-- Bom uso do ID -->
             <div class="score">
+                <!-- ID Score acima, class score abaixo ? Rever esses nomes, não pilha mt com isso, mas fica pra se pensar, não sai só colocando o nome, pensa em quem vai ver esse código dps -->
                 <h2>Vidas Restantes: </h2>
                 <div class="msg" id="vidas">
+                    <!-- class msg ? pq tem corações e não mensagens? -->
                     <img src="img/cor.png" alt="coração" class="v">
                     <img src="img/cor.png" alt="coração" class="v">
                     <img src="img/cor.png" alt="coração" class="v">
@@ -145,13 +175,16 @@
             </div>
         </div>
         <div id="jogo">
+            <!-- Bom uso do ID -->
             <div id="time"></div>
             <div id="bola"></div>
-            <div id="jogador" class="barra esquerda"></div>
-            <div id="cpu" class="barra direita"></div>
+            <div id="jogador" class="barra esquerda"></div> <!-- Essas classes ficaram bem claras! -->
+            <div id="cpu" class="barra direita"></div> <!-- Essas classes ficaram bem claras! -->
         </div>
         <div id="painel">
+            <!-- Bom uso do ID -->
             <button id="recomecar" class="b">Recomeçar</button>
+            <!-- Bom uso da class .b, mas poderia ser .btn, .button diz pra quem vai ler o codigo oq é isso -->
             <button id="iniciar" class="b">Jogar</button>
             <select id="nivel" class="b" onchange="nivel()">
                 <option value="n1">Nível 1</option>
@@ -162,7 +195,11 @@
             </select>
         </div>
     </div>
+
+    <!-- Separa isso em um arquivo script.js ??-->
     <script>
+        /* Boa divisão/comentarios te faz diferente de muitos fazer com que outras pessoas entendam seus códigos*/
+
         //Elementos
         let btIniciar
         let bola
@@ -180,10 +217,10 @@
         let posJogX, posJogY
         let posCpuX, posCpuxY
 
-        //Reset
+        //Reset    /* Deixa tudo em uma linha? */
         let posJogInitY = 180, posJogInitX = 10, posCpuInitY = 180, posCpuInitX = 930, posBolaInitX = 480, posBolaInitY = 250, pontosInit = 0, vidasInit = 3, velIncInit = 64, dificultAnt = "n1"
 
-        //Tamanhos
+        //Tamanhos   /* Deixa tudo em uma linha? */
         let campoX = 0, campoY = 0, campoW = 960, campoH = 500
         let barraW = 20, barraH = 140, bolaW = 20, bolaH = 20
 
@@ -196,7 +233,7 @@
 
         //Controle
         let tecla
-        let jogo = false, perdeu = false, desafio = false, pause = false
+        let jogo = false, perdeu = false, desafio = false, pause = false /* Deixa tudo em uma linha? */
         let dificult
         let contador = 3
 
@@ -213,13 +250,13 @@
         }
 
         //Movimentação Bola
-        function controlarB() {
-            if (jogo) {
+        function controlarB() {  /* MUITOS IF's nessa função, jeito mlhr de fazer?? */
+            if (jogo) { /* Boa, ta pegando bem o uso de booleans! */
                 posBolaX += velBola * bolaX
                 posBolaY += velBola * bolaY
                 //Colisão com Jogador
                 if (
-                    (posBolaX <= posJogX + barraW) &&
+                    (posBolaX <= posJogX + barraW) && /* A primeira verificação identou bem, na segunda poderia ter quebrado linha também! são verificações grandes. */
                     ((posBolaY + bolaH >= posJogY) && (posBolaY <= posJogY + barraH))
                 ) {
                     bolaX *= -1
@@ -251,7 +288,7 @@
                     jogo = true
                     if (pontos == 10) {
                         alert("Parabéns, Você venceu!\nVocê pode continuar jogando ou...\nRecomeçar em uma dificuldade ainda mais desafiadora!")
-                        document.getElementById("pontos").style.background = "#1d9bf0"
+                        document.getElementById("pontos").style.background = "#1d9bf0"  /* Evite escrever estilos no JS, tente colocar uma classe no CSS, que quando essa condição for verdadeira setar. EX: 10 pontos == winner, classe no CSS .winner, que quando essa condição for verdadeira setar a class .winner no Element "pontos" */
                         desafio = true
                     } reiniciar()
                     //Pontuação - Cpu
@@ -264,12 +301,12 @@
                     jogador.style.top = posJogInitY + "px"
                     cpu.style.top = posCpuInitY + "px"
                     vidas--
-                    v[vidas].style.display = "none"
+                    v[vidas].style.display = "none" /* Style no JS, poderia ser uma class .invisible que seta qnd essa condição é verdadera! */
                     jogo = true
                     if ((vidas <= 0) && (!desafio)) {
                         perdeu = true
                         jogo = false
-                        alert("Game Over!\nVocê pode tentar outra vez ou diminuir a dificuldade!")
+                        alert("Game Over!\nVocê pode tentar outra vez ou diminuir a dificuldade!") /* Vamos parar de usar ALERT e fazer um MODAL para aparecer na tela quando precisar interagir com o usuário ? Fica de desafio, caso queira aplicar! Não está errado, mas mostra por mercado que da pra fazer algo bonito, pode ser um diferencial, sai da caixinha. */
                     } else if ((vidas <= 0) && (desafio)) {
                         perdeu = true
                         jogo = false
@@ -359,8 +396,8 @@
             if (!pause) {
                 btIniciar.style.display = "inline"
                 document.getElementById("time").innerHTML = ""
-                v[0].style.display = "inline"
-                v[1].style.display = "inline"
+                v[0].style.display = "inline" /*  BOM EXEMPLO PRA USAR UM FOREACH/MAP v.forEach ...*/
+                v[1].style.display = "inline"   /* Se esse vetor ficasse maior, você teria que vir aqui e colocar v[3]... Não é escalável. */
                 v[2].style.display = "inline"
                 document.getElementById("pontos").innerHTML = "0"
                 bola.style.left = posBolaInitX + "px"
@@ -380,7 +417,7 @@
         //Selecionar Dificuldade
         function nivel() {
             if ((!jogo) && (contador == 3)) {
-                switch (dificult.value) {
+                switch (dificult.value) {  /* Bom switch, fica mais bonito que IF IF IF IF IF né ? */
                     case "n1":
                         velCpu = 4
                         velJogador = 8
@@ -427,7 +464,7 @@
                 if (contador > 0) {
                     document.getElementById("time").innerHTML = `${contador}...`
                     contador--
-                    setTimeout(reiniciar, 1000)
+                    setTimeout(reiniciar, 1000) /* Poderia mostrar pro usuario que ele ta esperando 1 segundo né? */
                 } else {
                     document.getElementById("time").innerHTML = "Vai!"
                     jogo = false
@@ -458,8 +495,31 @@
             document.addEventListener("keyup", teclaU)
         }
 
-        window.addEventListener("load", inicializar)
+        window.addEventListener("load", inicializar) /* Ta funcionando ? */
     </script>
 </body>
 
 </html>
+
+
+<!-- 
+    
+    COMENTARIOS GERAIS: 
+    - NÃO DEIXE DE LER TODOS OS COMENTARIOS DO CODIGO!
+
+    - Cara, no geral, bem bom, é isso, faça as coisas funcionar! Faça as coisas acontecerem.
+    - Depois que fez, continue como tu fez, se preocupe em melhorar, aprimorar, resolver bugs, preocupação com o código, etc ...
+    - Já falei vaaaaaaaaaaaaaaaaaaaaaaaaaaarias vezes, pra separar os arquivos, acostuma trabalhar com arquivos separados, você já viu o quão grande são projetos reais e quantas pastas/arquivos tem. 
+    - Se preferir, utilize a identação de dois espaços, pra mim, fica mais limpo, não fica muito grande os espaçamentos no editor, facilit a de ver o codigo, pq não fica passando da tela, etc.
+    - Procure nomear melhor suas classes, ids e funções. No geral, isso vem com o tempo, lendo código e escrevendo, é questão de experiência.
+    - Você deve escrever código, sempre pensando que outras pessoas podem LER, você pode pensar no seu EU do futuro, se você, daqui 2 meses voltar nesse código, vai entender oq estou falando. Mas se começar desde já, escrever código para o seu "EU" do futuro, para outras pessoas será muito mais facil de mostrar isso pra alguém. 
+    - Gostei dos comentarios no código ajudou a entender e a separar, mas já pensou se você conseguisse nomear as funções/variaveis sem precisar comentar?
+
+    Não deixa de dormir pra fazer isso, pq vai te fazer mal.
+    Terão semanas que você vai estar desanimado e não vai nem querer olhar pra código, mas não deixa isso abalar. Se precisar descansa, se precisar para. Mas não deixa as coisas de lado. 
+
+    É muito da hora mesmo você estar se preocupando com bons códigos, no começo é dificil escrever bons códigos, mas com o tempo, você vai ver que fica automatico.
+
+    
+    É isso lek, good hacking, bons estudos e VOA! Tu vai longe com essa vontade.
+-->
