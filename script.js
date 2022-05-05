@@ -98,7 +98,7 @@ function controlarB() {
             pontos++
             pontosDisplay.innerHTML = pontos
             jogo = true
-            if (pontos == 1) {
+            if (pontos == 10) {
                 msg = "Parabéns, Você venceu!<br>Você pode continuar jogando ou...<br>Recomeçar em uma dificuldade ainda mais desafiadora!"
                 continuar = true
                 jogo=false
